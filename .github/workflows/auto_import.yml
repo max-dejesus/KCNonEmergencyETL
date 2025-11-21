@@ -1,0 +1,32 @@
+name: Execute notebook
+
+on:
+  schedule:
+      - cron: '0 0 * * *'
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.12.12"
+    - name: Set up Java
+      uses: actions/setup-java@v5
+      with:
+        distribution: 'zulu'
+        java-version: '21'
+    - name: Install dependencies
+      run: pip install -r src/requirements.txt -q
+    - name: Run notebook
+      run: |
+        jupyter nbconvert \
+        --to notebook \
+        --execute src/Auto_Import.ipynb \
+        --log-level 20
+      env:
+        DATAKC_APP_TOKEN: ${{ secrets.DATAKC_APP_TOKEN }}
+        MONGO_CONN_STRING: ${{ secrets.MONGO_CONN_STRING }}

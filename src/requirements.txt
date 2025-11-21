@@ -1,0 +1,4 @@
+jupyter
+pymongo==4.15.4
+pyspark==3.5.1
+sodapy==2.2.0
